@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+  <body>
+
+    <!--Instalando los SDK de firebase -->
+  <script type="module" >
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+    apiKey: "AIzaSyCgLK8BoLeAzv4S8-Jx3mqXpJSEZJzaIdw",
+    authDomain: "cinestar-jp-49e4e.firebaseapp.com",
+    projectId: "cinestar-jp-49e4e",
+    storageBucket: "cinestar-jp-49e4e.firebasestorage.app",
+    messagingSenderId: "297607668639",
+    appId: "1:297607668639:web:26e0e780c047dea49953aa"
+    };
+
+ // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      const setPeliculas = async() =>{
+        const data = await fetch('http://localhost/cinestar_sweb_php/peliculas')
+        const peliculas = await data.json()
+
+        peliculas.data.forEach(pelicula => {
+          addDoc(collection(db,'peliculas'), pelicula)
+        })
+
+        console.log("Peliculas subida correctamente")
+      }
+
+      const setCines = async() =>{
+        const data = await fetch('http://localhost/cinestar_sweb_php/cines')
+        const cines = await data.json()
+
+        cines.data.forEach(async (cine) => {
+          const peliculas = await fetch(`http://localhost/cinestar_sweb_php/cines/${cine.id}/peliculas`)
+          cine.peliculas = (await peliculas.json()).data
+
+          const tarifas = await fetch(`http://localhost/cinestar_sweb_php/cines/${cine.id}/tarifas`)
+          cine.tarifas = (await tarifas.json()).data
+          addDoc(collection(db,'cines'), cine)
+        })
+
+      }
+
+      //setPeliculas()
+      //setCines()
+    </script>
+    
+  </body>
+</html>
