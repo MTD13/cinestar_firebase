@@ -16,8 +16,6 @@ const firebaseConfig = {
 // Inicializar Firebase
 const app = initializeApp(firebaseConfig);
 
-//Conecta con la BD Firebase
-const db = getFirestore(app);
+//Conecta con la BD Firebase y Exporta BD para usarlos en otros archivos JS
+export const db = getFirestore(app);
 
-//Exporta BD para usarlos en otros archivos JS
-export{db};

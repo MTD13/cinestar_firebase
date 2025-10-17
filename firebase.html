@@ -26,14 +26,26 @@
       const db = getFirestore(app);
 
       const setPeliculas = async() =>{
-        const data = await fetch('http://localhost/cinestar_sweb_php/peliculas')
+        const data = await fetch('http://localhost/cinestar_sweb_php/peliculas/cartelera')
         const peliculas = await data.json()
 
         peliculas.data.forEach(pelicula => {
+          pelicula.tipo = "cartelera";
           addDoc(collection(db,'peliculas'), pelicula)
         })
 
         console.log("Peliculas subida correctamente")
+      }
+      const setEstrenos = async () => {
+        const data = await fetch("http://localhost/cinestar_sweb_php/peliculas/estrenos");
+        const estrenos = await data.json();
+
+        estrenos.data.forEach(estreno => {
+          estreno.tipo = "estrenos";
+          addDoc(collection(db, "peliculas"), estreno);
+        });
+
+        console.log(" Estrenos subidos correctamente");
       }
 
       const setCines = async() =>{
@@ -53,6 +65,7 @@
 
       //setPeliculas()
       //setCines()
+      setEstrenos()
     </script>
     
   </body>
